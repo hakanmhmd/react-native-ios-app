@@ -71,7 +71,13 @@ class Login extends Component {
             username: this.state.username,
             password: this.state.password
         }, (result) => {
-            this.setState(result);
+            this.setState(Object.assign({
+                loading: false
+            }, result));
+
+            if(result.success && this.props.onLogin){
+                this.props.onLogin();
+            }
         });
     }
 

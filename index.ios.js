@@ -3,15 +3,53 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  ActivityIndicator
 } from 'react-native';
 import Login from './components/Login';
+import AuthService from './services/AuthService';
 
 export default class nativeiosapp extends Component {
+  constructor(){
+    super();
+    this.state = {
+      isLoggedIn: false,
+      checkingAuth: true
+    };
+  }
+
+  onLogin() {
+    this.setState({isLoggedIn: true});
+  }
+
+  componentDidMount(){
+     AuthService.getAuthStorage((err, authInfo) => {
+      this.setState({checkingAuth: false, isLoggedIn: authInfo != null});
+     });
+  }
+
   render() {
-    return (
-      <Login />
-    );
+    if(this.state.checkingAuth){
+      return (
+        <View style={styles.container}>
+          <ActivityIndicator
+                    style={styles.loader}
+                    animating={this.state.loading}
+                    size="large"/>
+        </View>
+      );
+    }
+    if(this.state.isLoggedIn){
+      return (
+        <View style={styles.container}>
+          <Text style={styles.welcome}> wlecaahahhaome</Text>
+        </View>
+      );
+    } else {
+      return (
+        <Login onLogin={this.onLogin.bind(this)}/>
+      );
+    }
   }
 }
 
