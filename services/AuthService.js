@@ -21,7 +21,7 @@ class AuthService {
             }
             var authInfo = {
                 header: {
-                    Authorization: 'Basic' + authObject['auth']
+                    Authorization: 'Basic ' + authObject['auth']
                 },
                 user: JSON.parse(authObject['user'])
             };
