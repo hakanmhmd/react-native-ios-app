@@ -49,7 +49,8 @@ const styles = StyleSheet.create({
     },
     loader: {
         marginTop: 35
-    }, error: {
+    },
+    error: {
         color: 'red',
         paddingTop: 20
     }
@@ -75,20 +76,26 @@ class Login extends Component {
                 loading: false
             }, result));
 
-            if(result.success && this.props.onLogin){
-                this.props.onLogin();
+            if (result.success && this.props.onLogin) {
+                this
+                    .props
+                    .onLogin();
             }
         });
     }
 
     render() {
-        var error = <View />
+        var error = <View/>
 
-        if(!this.state.success && this.state.badCredentials){
-            error = <Text style={styles.error}> Wrong username or password </Text>;
+        if (!this.state.success && this.state.badCredentials) {
+            error = <Text style={styles.error}>
+                Wrong username or password
+            </Text>;
         }
-        if(!this.state.success && this.state.unknownError){
-            error = <Text style={styles.error}> We experienced an unknown issue. </Text>;
+        if (!this.state.success && this.state.unknownError) {
+            error = <Text style={styles.error}>
+                We experienced an unknown issue.
+            </Text>;
         }
         return (
             <View style={styles.container}>
