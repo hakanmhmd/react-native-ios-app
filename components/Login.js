@@ -49,6 +49,9 @@ const styles = StyleSheet.create({
     },
     loader: {
         marginTop: 35
+    }, error: {
+        color: 'red',
+        paddingTop: 20
     }
 });
 
@@ -72,14 +75,35 @@ class Login extends Component {
                 'Authorization' : 'Basic ' + encoded
             }
         }).then((response) => {
-            return response.json();
+            console.log(response.status)
+            if(response.status >= 200 && response.status < 300){
+                return response.json();
+            }
+            
+            throw {
+                badCredentials: response.status == 401,
+                unknownError: response.status != 401
+            }
+            
         }).then((result) => {
             console.log(result);
+            this.setState({success: true});
+        }).catch(err => {
+            this.setState(err)
+        }).finally(() => {
             this.setState({loading: false});
         })
     }
 
     render() {
+        var error = <View />
+
+        if(!this.state.success && this.state.badCredentials){
+            error = <Text style={styles.error}> Wrong username or password </Text>;
+        }
+        if(!this.state.success && this.state.unknownError){
+            error = <Text style={styles.error}> We experienced an unknown issue. </Text>;
+        }
         return (
             <View style={styles.container}>
                 <Image
@@ -106,6 +130,8 @@ class Login extends Component {
                         Log in
                     </Text>
                 </TouchableHighlight>
+
+                {error}
 
                 <ActivityIndicator
                     style={styles.loader}
