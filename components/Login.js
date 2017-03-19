@@ -8,12 +8,13 @@ import {
     TouchableHighlight,
     ActivityIndicator
 } from 'react-native';
+import buffer from 'buffer';
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: 40,
-        padding: 15,
+        padding: 20,
         alignItems: 'center',
         backgroundColor: '#F5FCFF'
     },
@@ -63,6 +64,19 @@ class Login extends Component {
 
     onLoginPress() {
         this.setState({loading: true});
+        let b = new buffer.Buffer(this.state.username + ':' + this.state.password);
+        let encoded = b.toString('base64');
+
+        fetch('https://api.github.com/user', {
+            headers: {
+                'Authorization' : 'Basic ' + encoded
+            }
+        }).then((response) => {
+            return response.json();
+        }).then((result) => {
+            console.log(result);
+            this.setState({loading: false});
+        })
     }
 
     render() {
