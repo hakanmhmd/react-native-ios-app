@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Text, View, StyleSheet, TabBarIOS, NavigatorIOS} from 'react-native';
 import Feed from './Feed';
+import Search from './SearchComponent';
 
 const styles = StyleSheet.create({
     container: {
@@ -20,7 +21,7 @@ class AppContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedTab: 'feed'
+            selectedTab: 'search'
         };
     }
 
@@ -46,7 +47,11 @@ class AppContainer extends Component {
                     icon={require('../ios/nativeiosapp/Images.xcassets/search.imageset/search.png')}
                     onPress={() => this.setState({selectedTab: 'search'})}>
 
-                    <Text style={styles.welcome}>tab2 </Text>
+                    <NavigatorIOS style={{flex: 1}}
+                                  initialRoute={{
+                                      component: Search,
+                                      title: 'Search'
+                                    }} />
                 </TabBarIOS.Item>
             </TabBarIOS>
         );
