@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, StyleSheet, TabBarIOS} from 'react-native';
+import {Text, View, StyleSheet, TabBarIOS, NavigatorIOS} from 'react-native';
 import Feed from './Feed';
 
 const styles = StyleSheet.create({
@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF'
+        backgroundColor: '#F5FCFF',
     },
     welcome: {
         fontSize: 20,
@@ -33,7 +33,11 @@ class AppContainer extends Component {
                     icon={require('../ios/nativeiosapp/Images.xcassets/inbox.imageset/inbox.png')}
                     onPress={() => this.setState({selectedTab: 'feed'})}>
 
-                    <Feed />
+                    <NavigatorIOS style={{flex: 1}}
+                                  initialRoute={{
+                                      component: Feed,
+                                      title: 'Feed'
+                                    }} />
                 </TabBarIOS.Item>
 
                 <TabBarIOS.Item

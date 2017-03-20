@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {Text, View, ListView, ActivityIndicator, Image} from 'react-native';
+import {Text, View, ListView, ActivityIndicator, Image, TouchableHighlight} from 'react-native';
 import AuthService from '../services/AuthService';
+import FeedDetails from './FeedDetails';
 import moment from 'moment';
 
 class Feed extends Component {
@@ -27,43 +28,57 @@ class Feed extends Component {
             let url = "https://api.github.com/users/" 
                         + info.user.login
                         + '/received_events';
-            console.log(info)
             fetch(url, {
                 headers: info.header
             }).then((response) => {
                 return response.json();
             }).then(data => {
-                this.setState({data: this.state.data.cloneWithRows(data),
-                            showProgress: false});
+                this.setState({
+                    data: this.state.data.cloneWithRows(data),
+                    showProgress: false
+                });
             });
+        });
+    }
+
+    pressRow(rowData){
+        this.props.navigator.push({
+            component: FeedDetails,
+            title: rowData.type,
+            passProps: {
+                event: rowData
+            }
         });
     }
 
     renderRow(rowData) {
         console.log(rowData)
         return (
-            <View style={{
-                flex:1,
-                flexDirection: 'row',
-                padding: 20,
-                alignItems: 'center',
-                borderColor: '#d7d7d7',
-                borderBottomWidth: 1
-            }}>
-                <Image source={{uri: rowData.actor.avatar_url}}
-                       style={{
-                           height: 36,
-                           width: 36,
-                           borderRadius: 18
-                       }} />
+            <TouchableHighlight onPress={() => this.pressRow(rowData)}
+                                underlayColor='#ddd'>
                 <View style={{
-                    paddingLeft: 20,
+                    flex:1,
+                    flexDirection: 'row',
+                    padding: 20,
+                    alignItems: 'center',
+                    borderColor: '#d7d7d7',
+                    borderBottomWidth: 1,
                 }}>
-                    <Text>{moment(rowData.created_at).fromNow()}</Text>
-                    <Text>{rowData.actor.login}</Text>
-                    <Text style={{fontWeight: '600'}}>{rowData.repo.name}</Text>
+                    <Image source={{uri: rowData.actor.avatar_url}}
+                        style={{
+                            height: 36,
+                            width: 36,
+                            borderRadius: 18
+                        }} />
+                    <View style={{
+                        paddingLeft: 20,
+                    }}>
+                        <Text>{moment(rowData.created_at).fromNow()}</Text>
+                        <Text>{rowData.actor.login}</Text>
+                        <Text style={{fontWeight: '600'}}>{rowData.repo.name}</Text>
+                    </View>
                 </View>
-            </View>
+            </TouchableHighlight>
         );
     }
 
@@ -76,7 +91,7 @@ class Feed extends Component {
             );
         }
         return (
-            <View style={{flex: 1, justifyContent: 'flex-start', marginTop: 20}}>
+            <View style={{flex: 1, justifyContent: 'flex-start', marginTop: 63}}>
                 <ListView dataSource={this.state.data}
                           renderRow={this.renderRow.bind(this)} />
             </View>
